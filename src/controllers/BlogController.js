@@ -261,3 +261,25 @@ exports.delete = async (req, res) => {
     }
 
 }
+
+
+exports.insert_with_image = async (req, res) => {
+    const file = req.file;
+    
+    if (req.fileValidationError) {
+        return res.status(400).json({ error: req.fileValidationError });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded.' });
+    }
+
+    res.json(
+        {
+            msg: 'File uploaded successfully!',
+            pth: file.path
+        }
+    );
+}
+
+
