@@ -4,7 +4,12 @@ const port = process.env.port || 5003
 const BodyParser = require('body-parser')
 require('dotenv').config()
 const path = require('path')
+const fileUpload = require('express-fileupload');
 
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    preserveExtension: true
+}));
 
 const HomeRoutes = require('./routes/HomeRoutes')
 const BlogRoutes = require('./routes/BlogRoutes')

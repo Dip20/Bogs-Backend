@@ -1,5 +1,6 @@
 const moment = require('moment');
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const path = require('path');
 const prisma = new PrismaClient()
 
 exports.insert = async (req, res) => {
@@ -265,7 +266,7 @@ exports.delete = async (req, res) => {
 
 exports.insert_with_image = async (req, res) => {
     const file = req.file;
-    
+
     if (req.fileValidationError) {
         return res.status(400).json({ error: req.fileValidationError });
     }
@@ -282,4 +283,41 @@ exports.insert_with_image = async (req, res) => {
     );
 }
 
+
+var fs = require('fs');
+
+exports.insert_with_image_2 = async (req, res) => {
+    let sampleFile;
+    let uploadPath;
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    sampleFile = req.files.sampleFile;
+
+
+
+    uploadPath = path.join(`src/public/uploads/blogs/`);
+    filename = `${Date.now()}${path.extname(sampleFile.name)}`;
+
+
+    fs.mkdir(uploadPath, { recursive: true }, (err) => {
+        if (err) {
+            res.statusCode(400).json({
+                msg: "Error creating folder using file system"
+            })
+        }
+
+        sampleFile.mv(uploadPath + filename, function (err) {
+            if (err)
+                return res.status(500).json({ err });
+
+            res.json({ msg: 'File uploaded!', path: uploadPath + filename });
+        });
+    });
+
+
+
+}
 
