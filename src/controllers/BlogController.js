@@ -2,6 +2,7 @@ const moment = require('moment');
 const { PrismaClient } = require('@prisma/client');
 const path = require('path');
 const prisma = new PrismaClient()
+const fs = require('fs');
 
 exports.insert = async (req, res) => {
     /**
@@ -264,6 +265,9 @@ exports.delete = async (req, res) => {
 }
 
 
+/**
+ * File Upload with Multer
+ */
 exports.insert_with_image = async (req, res) => {
     const file = req.file;
 
@@ -284,8 +288,9 @@ exports.insert_with_image = async (req, res) => {
 }
 
 
-var fs = require('fs');
-
+/**
+ * File Upload with express file upload
+ */
 exports.insert_with_image_2 = async (req, res) => {
     let sampleFile;
     let uploadPath;
@@ -296,9 +301,7 @@ exports.insert_with_image_2 = async (req, res) => {
 
     sampleFile = req.files.sampleFile;
 
-
-
-    uploadPath = path.join(`src/public/uploads/blogs/`);
+    uploadPath = path.join(`src/public/uploads/blogs/${moment().year()}/${moment().month() + 1}/`);
     filename = `${Date.now()}${path.extname(sampleFile.name)}`;
 
 
@@ -313,7 +316,7 @@ exports.insert_with_image_2 = async (req, res) => {
             if (err)
                 return res.status(500).json({ err });
 
-            res.json({ msg: 'File uploaded!', path: uploadPath + filename });
+            res.json({ msg: 'File uploaded!', path: `http://localhost:5003/uploads/blogs/${moment().year()}/${moment().month() + 1}/` + filename });
         });
     });
 
